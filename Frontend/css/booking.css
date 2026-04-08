@@ -1,0 +1,38 @@
+body {
+    background: #141414;
+    color: white;
+    text-align: center;
+}
+
+.screen {
+    margin: 20px auto;
+    width: 60%;
+    padding: 10px;
+    background: gray;
+    border-radius: 10px;
+}
+
+#hall {
+    display: grid;
+    grid-template-columns: repeat(10, 40px);
+    gap: 10px;
+    justify-content: center;
+    margin: 20px;
+}
+
+.seat {
+    width: 40px;
+    height: 40px;
+    background: #444;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.seat.selected {
+    background: red;
+}
+
+.seat.taken {
+    background: #999;
+    cursor: not-allowed;
+}
