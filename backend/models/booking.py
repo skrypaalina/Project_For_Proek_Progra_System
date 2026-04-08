@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, Enum, DECIMAL, TIMESTAMP, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
-from database import Base
+from backend.database import Base
 
 class Booking(Base):
     __tablename__ = "Bookings"

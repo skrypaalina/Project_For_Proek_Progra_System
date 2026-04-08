@@ -7,13 +7,6 @@ header.innerHTML = `
     </div>
 `;
 
-
-
-
-
-
-
-
 window.goLogin = () => {
     window.location.href = "login.html";
 };
