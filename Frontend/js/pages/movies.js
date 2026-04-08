@@ -11,4 +11,4 @@ getMovies().then(data => {
 
 window.openMovie = (id) => {
     window.location.href = "movie.html?id=" + id;
-};
+}; 
