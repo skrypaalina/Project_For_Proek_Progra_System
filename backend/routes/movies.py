@@ -1,10 +1,11 @@
 from fastapi import APIRouter
-from database import SessionLocal
-from models.movie import Movie
+from backend.database import SessionLocal
+from backend.models.movie import Movie # Переконайся, що модель є
 
 router = APIRouter()
 
 @router.get("/movies")
 def get_movies():
     db = SessionLocal()
-    return db.query(Movie).all()
+    movies = db.query(Movie).all()
+    return movies

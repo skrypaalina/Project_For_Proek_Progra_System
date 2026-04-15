@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from database import SessionLocal
-from models.ticket import Ticket
+from backend.database import SessionLocal
+from backend.models.ticket import Ticket
 
 router = APIRouter()
 

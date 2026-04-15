@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer
-from database import Base
+from backend.database import Base
 
 class Ticket(Base):
     __tablename__ = "Tickets"
