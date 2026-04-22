@@ -1,63 +1,58 @@
-// Отримуємо ID з URL (якщо він є)
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
+const urlParams = new URLSearchParams(window.location.search);
+const movieId = urlParams.get('id');
 
-// Визначаємо адресу запиту. 
-// Якщо є ID — запитуємо сеанси конкретного фільму, якщо немає — всі фільми.
-const apiUrl = id 
-    ? `http://127.0.0.1:8000/api/sessions/${id}` 
-    : `http://127.0.0.1:8000/api/movies`;
+async function loadData() {
+    const container = document.getElementById('sessions-container');
+    const titleEl = document.getElementById('movie-title');
+    const descEl = document.getElementById('movie-description');
+    
+    // 1. Знаходимо тег для картинки, який ми додали в HTML
+    const posterEl = document.getElementById('movie-poster');
 
-const displayElement = document.getElementById("movies") || document.getElementById("sessions");
+    try {
+        console.log("Починаю завантаження для ID:", movieId);
 
-if (displayElement) {
-    fetch(apiUrl)
-    .then(res => {
-        if (!res.ok) throw new Error("Помилка завантаження даних");
-        return res.json();
-    })
-    .then(data => {
-        displayElement.innerHTML = ""; // Очищуємо текст "Завантаження..."
+        const movieResponse = await fetch(`/api/movies/${movieId}`);
+        if (!movieResponse.ok) throw new Error(`Помилка фільму: ${movieResponse.status}`);
+        const movie = await movieResponse.json();
+        
+        titleEl.textContent = movie.title;
+        descEl.textContent = movie.description;
 
-        if (data.length === 0) {
-            displayElement.innerHTML = "<p>На жаль, нічого не знайдено.</p>";
+        // --- НОВИЙ БЛОК: ВСТАВЛЯЄМО ФОТО ---
+        // Тут ми припускаємо, що у вашій базі даних колонка з картинкою називається 'poster_url'
+        if (movie.poster_url) {
+            posterEl.src = movie.poster_url;
+            posterEl.style.display = 'block'; // Показуємо фото
+        } else {
+            posterEl.style.display = 'none'; // Ховаємо рамку, якщо фото немає в базі
+        }
+        // ------------------------------------
+
+        const sessionsResponse = await fetch(`/api/movies/${movieId}/sessions`);
+        if (!sessionsResponse.ok) throw new Error(`Помилка сеансів: ${sessionsResponse.status}`);
+        const sessions = await sessionsResponse.json();
+
+        container.innerHTML = ""; 
+        
+        if (sessions.length === 0) {
+            container.innerHTML = "<p>На жаль, сеансів поки немає.</p>";
             return;
         }
 
-        data.forEach(item => {
-            // Якщо це фільм (має title), малюємо картку фільму
-            if (item.title) {
-                displayElement.innerHTML += `
-                    <div class="movie-card">
-                        <img src="${item.poster_url || 'https://via.placeholder.com/200x300'}" alt="${item.title}">
-                        <div class="movie-info">
-                            <h3>${item.title}</h3>
-                            <button onclick="viewSessions(${item.id})">Дивитись сеанси</button>
-                        </div>
-                    </div>
-                `;
-            } 
-            // Якщо це сеанс (має start_time), малюємо сеанс
-            else if (item.start_time) {
-                displayElement.innerHTML += `
-                    <div class="session-item">
-                        <p>Час: <strong>${item.start_time}</strong></p>
-                        <button onclick="book(${item.id})">Бронювати квиток</button>
-                    </div>
-                `;
-            }
+        sessions.forEach(session => {
+            const time = new Date(session.start_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const btn = document.createElement('button');
+            btn.className = 'session-btn';
+            btn.innerHTML = `${time} <br> <span>${session.base_price} грн</span>`;
+            btn.onclick = () => window.location.href = `/booking.html?session_id=${session.id}`;
+            container.appendChild(btn);
         });
-    })
-    .catch(err => {
-        console.error(err);
-        displayElement.innerHTML = "<p style='color:red;'>Помилка зв'язку з сервером. Перевірте, чи запущено FastAPI.</p>";
-    });
+
+    } catch (error) {
+        console.error("Помилка завантаження:", error);
+        container.innerHTML = `<p style="color: red;">Сталася помилка: ${error.message}. Перевірте консоль (F12).</p>`;
+    }
 }
 
-window.viewSessions = (movieId) => {
-    window.location.href = `index.html?id=${movieId}`;
-};
-
-window.book = (sessionId) => {
-    window.location.href = `booking.html?session=${sessionId}`;
-};
+loadData();

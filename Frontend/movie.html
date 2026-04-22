@@ -1,8 +1,28 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Інформація про фільм</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
 <body>
 
-<h1>Сеанси</h1>
-<div id="sessions"></div>
+    <div class="movie-container">
+        <div class="movie-detail-wrapper">
+            
+            <img id="movie-poster" src="" alt="Постер фільму" class="movie-poster">
 
-<script type="module" src="js/pages/movie.js"></script>
+            <div class="movie-text-wrapper">
+                <h1 id="movie-title">Завантаження...</h1>
+                <p id="movie-description"></p>
+            </div>
+        </div>
+
+        <h2>Сеанси</h2>
+        <div id="sessions-container" class="sessions-grid"></div>
+    </div>
+
+    <script type="module" src="/js/pages/movie.js"></script>
 
 </body>
+</html>

@@ -1,5 +1,5 @@
 import { api } from "./client.js";
 
-export function getMovies() {
-    return api("/movies");
+export async function getMovies() {
+    return await api("/api/movies"); 
 }

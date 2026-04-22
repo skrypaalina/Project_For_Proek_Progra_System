@@ -1,42 +1,31 @@
 const hall = document.getElementById("hall");
 
-// отримуємо session_id з URL
 const params = new URLSearchParams(window.location.search);
-const session_id = params.get("session");
+const session_id = params.get("session_id"); 
 
-// розміри залу
 const rows = 5;
 const cols = 10;
 
 let selectedSeats = [];
 let takenSeats = [];
 
-// 🎯 створення залу
 function createHall() {
-
     hall.innerHTML = "";
-
     for (let i = 1; i <= rows * cols; i++) {
-
         const seat = document.createElement("div");
         seat.classList.add("seat");
 
-        // зайняті місця
         if (takenSeats.includes(i)) {
             seat.classList.add("taken");
         }
 
         seat.innerText = i;
-
         seat.onclick = () => selectSeat(seat, i);
-
         hall.appendChild(seat);
     }
 }
 
-// 🎯 вибір місця
 function selectSeat(el, id) {
-
     if (el.classList.contains("taken")) return;
 
     if (selectedSeats.includes(id)) {
@@ -48,48 +37,55 @@ function selectSeat(el, id) {
     }
 }
 
-// 🎯 отримання зайнятих місць з бекенду
 function loadTakenSeats() {
-
-    fetch(`http://127.0.0.1:8000/booking/${session_id}`)
-    .then(res => res.json())
+    fetch(`/api/booking/${session_id}`)
+    .then(res => {
+        if (!res.ok) throw new Error("Сервер не знайшов адресу");
+        return res.json();
+    })
     .then(data => {
-        // очікується список типу [1,5,7]
         takenSeats = data;
         createHall();
     })
-    .catch(() => {
+    .catch((err) => {
+        console.error("Деталі помилки завантаження:", err);
         alert("Помилка завантаження місць");
     });
 }
 
-// 🎯 покупка
 function buy() {
-
     if (selectedSeats.length === 0) {
-        alert("Оберіть місця");
+        alert("Оберіть хоча б одне місце");
         return;
     }
 
-    fetch("http://127.0.0.1:8000/book", {
+    fetch("/api/book", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            session_id: session_id,
+            session_id: parseInt(session_id),
             seats: selectedSeats
         })
     })
-    .then(res => res.json())
-    .then(() => {
-        alert("Квитки куплено");
-        loadTakenSeats(); // оновити зал
+    .then(res => {
+        if (!res.ok) throw new Error("Помилка при збереженні");
+        return res.json();
     })
-    .catch(() => {
+    .then(() => {
+        alert("Квитки успішно куплено! 🍿");
+        selectedSeats = []; 
+        loadTakenSeats(); 
+    })
+    .catch((err) => {
+        console.error("Деталі помилки бронювання:", err);
         alert("Помилка бронювання");
     });
 }
 
-// 🚀 запуск
-loadTakenSeats();
+if (session_id) {
+    loadTakenSeats();
+} else {
+    alert("Помилка: не знайдено ID сеансу");
+}

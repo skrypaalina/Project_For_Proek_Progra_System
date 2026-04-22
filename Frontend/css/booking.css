@@ -1,15 +1,26 @@
 body {
     background: #141414;
     color: white;
-    text-align: center;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 40px;
 }
 
 .screen {
-    margin: 20px auto;
     width: 60%;
-    padding: 10px;
-    background: gray;
-    border-radius: 10px;
+    height: 15px;
+    background: linear-gradient(to bottom, #555, #222);
+    margin-bottom: 50px;
+    border-radius: 50% / 100% 100% 0 0; 
+    box-shadow: 0 10px 20px rgba(229, 9, 20, 0.2); 
+    text-align: center;
+    color: #888;
+    font-size: 12px;
+    padding-top: 5px;
 }
 
 #hall {
@@ -23,16 +34,46 @@ body {
 .seat {
     width: 40px;
     height: 40px;
-    background: #444;
-    border-radius: 5px;
+    background: #333;
+    border-radius: 6px;
     cursor: pointer;
+    transition: all 0.3s ease; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #777;
+}
+
+.seat:hover:not(.taken) {
+    background: #555;
+    transform: scale(1.1); 
 }
 
 .seat.selected {
-    background: red;
+    background: #e50914 !important; 
+    color: white;
 }
 
 .seat.taken {
-    background: #999;
+    background: #222;
     cursor: not-allowed;
+    opacity: 0.5;
+}
+
+button {
+    margin-top: 30px;
+    padding: 15px 40px;
+    background: #e50914;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #b20710;
 }

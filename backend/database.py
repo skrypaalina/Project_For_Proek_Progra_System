@@ -4,6 +4,13 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 DATABASE_URL = "mysql+pymysql://root:root@localhost:8889/cinema"
 
 engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

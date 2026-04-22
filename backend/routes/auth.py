@@ -44,12 +44,11 @@ def login(data: UserLogin):
         # Шукаємо користувача
         user = db.query(User).filter(User.email == data.email).first()
         
-        # Перевіряємо пароль
         if not user or user.password_hash != hash_password(data.password):
             print("DEBUG: Невірний пароль або email")
             raise HTTPException(status_code=401, detail="Неправильний email або пароль")
         
         print(f"DEBUG: Успішний вхід для ID {user.id}")
-        return {"message": "ok", "user_id": user.id}
+        return {"message": "ok", "user_id": user.id, "first_name": user.first_name}
     finally:
         db.close()

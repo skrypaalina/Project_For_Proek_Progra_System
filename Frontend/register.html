@@ -78,7 +78,6 @@
         document.getElementById('registerForm').addEventListener('submit', async function(event) {
             event.preventDefault(); 
 
-            // Збираємо дані з усіх трьох полів
             const firstName = document.getElementById('firstName').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -87,13 +86,11 @@
             submitBtn.innerText = "Створення...";
 
             try {
-                // Відправляємо запит на реєстрацію у твій FastAPI
-                const response = await fetch('http://127.0.0.1:8000/api/register', {
+                const response = await fetch('http://127.0.0.1:8000/api/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json' 
                     },
-                    // Передаємо ім'я, пошту та пароль, як того чекає база
                     body: JSON.stringify({ 
                         first_name: firstName,
                         email: email, 
@@ -103,7 +100,6 @@
 
                 if (response.ok) {
                     alert("Акаунт успішно створено! Тепер ви можете увійти.");
-                    // Перекидаємо на сторінку логіну
                     window.location.href = "login.html"; 
                 } else {
                     const errorData = await response.json();
