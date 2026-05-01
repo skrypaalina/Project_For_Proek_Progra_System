@@ -6,53 +6,80 @@
     <title>Реєстрація — Cinema Star</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
     
     <style>
+        /* Стиль нової шапки */
+        .header-custom {
+            display: flex;
+            align-items: center;
+            padding: 15px 5%;
+            background: #000;
+            border-bottom: 1px solid #222;
+        }
+        .logo-text { color: #e50914; font-size: 1.5rem; font-weight: bold; text-decoration: none; }
+        
+        .back-btn-square {
+            width: 40px;
+            height: 40px;
+            background: #222;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            margin-left: 15px;
+        }
+        .back-btn-square:hover { background: #e50914; border-color: #e50914; }
+
         .login-container {
             max-width: 400px;
-            margin: 80px auto;
-            background: rgba(0, 0, 0, 0.75);
+            margin: 60px auto;
+            background: rgba(0, 0, 0, 0.85);
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+            color: white;
         }
-        .login-container h2 {
-            margin-bottom: 25px;
-            font-size: 2rem;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .login-container h2 { margin-bottom: 25px; font-size: 2rem; text-align: center; }
+        .form-group { margin-bottom: 20px; }
         .form-group input {
             width: 100%;
             padding: 15px;
             background: #333;
-            border: none;
+            border: 1px solid #444;
             border-radius: 4px;
             color: white;
             font-size: 1rem;
             box-sizing: border-box;
         }
-        .form-group input:focus {
-            outline: 2px solid #e50914;
-        }
-        .register-link {
-            display: block;
-            margin-top: 20px;
-            text-align: center;
-            color: #b3b3b3;
-            text-decoration: none;
-        }
-        .register-link:hover {
+        .form-group input:focus { outline: 2px solid #e50914; }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: #e50914;
             color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
         }
+        .register-link { display: block; margin-top: 20px; text-align: center; color: #b3b3b3; text-decoration: none; }
     </style>
 </head>
-<body>
+<body style="background: #141414; font-family: 'Inter', sans-serif; margin: 0;">
 
-    <header id="header" class="main-header"></header>
+    <header class="header-custom">
+        <a href="index.html" class="logo-text">Cinema Star</a>
+        <button onclick="window.history.back()" class="back-btn-square" title="Назад">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+    </header>
 
     <main class="container">
         <div class="login-container">
@@ -73,46 +100,52 @@
         </div>
     </main>
 
-    <script type="module" src="/components/header.js"></script>
     <script>
-        document.getElementById('registerForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); 
+    document.getElementById('registerForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); 
+        const submitBtn = document.querySelector('#registerForm .btn');
+        
+        // Зчитуємо дані з полів
+        const firstName = document.getElementById('firstName').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
-            const firstName = document.getElementById('firstName').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const submitBtn = document.querySelector('#registerForm .btn');
-            
-            submitBtn.innerText = "Створення...";
+        submitBtn.innerText = "Створення...";
+        submitBtn.disabled = true; // Блокуємо кнопку, щоб не клікали двічі
 
-            try {
-                const response = await fetch('http://127.0.0.1:8000/api/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json' 
-                    },
-                    body: JSON.stringify({ 
-                        first_name: firstName,
-                        email: email, 
-                        password: password 
-                    })
-                });
+        try {
+            const response = await fetch('http://127.0.0.1:8005/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    first_name: firstName,
+                    email: email, 
+                    password: password 
+                })
+            });
 
-                if (response.ok) {
-                    alert("Акаунт успішно створено! Тепер ви можете увійти.");
-                    window.location.href = "login.html"; 
-                } else {
-                    const errorData = await response.json();
-                    alert("Помилка: " + (errorData.detail || "Не вдалося зареєструватися. Можливо, такий email вже існує."));
-                    submitBtn.innerText = "Зареєструватися"; 
-                }
-            } catch (error) {
-                console.error("Помилка:", error);
-                alert("Не вдалося з'єднатися з сервером.");
+            const result = await response.json();
+
+            if (response.ok) {
+                // ЗБЕРІГАЄМО ДАНІ В ЛОКАЛЬНЕ СХОВИЩЕ (щоб буква М з'явилася відразу)
+                localStorage.setItem('user_id', result.user_id);
+                localStorage.setItem('first_name', firstName); 
+
+                alert("Акаунт успішно створено!");
+                // Перенаправляємо на головну, а не на логін
+                window.location.href = "index.html"; 
+            } else {
+                alert("Помилка: " + (result.detail || "Помилка реєстрації"));
                 submitBtn.innerText = "Зареєструватися";
+                submitBtn.disabled = false;
             }
-        });
-    </script>
-
+        } catch (error) {
+            console.error("Помилка реєстрації:", error);
+            alert("Не вдалося з'єднатися з сервером.");
+            submitBtn.innerText = "Зареєструватися";
+            submitBtn.disabled = false;
+        }
+    });
+</script>
 </body>
 </html>

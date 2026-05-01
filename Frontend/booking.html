@@ -2,20 +2,150 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Бронювання місць</title>
-    <link rel="stylesheet" href="/css/booking.css">
+    <title>Бронювання місць | Cinema Star</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/booking.css">
+    
+    <style>
+    /* ПРИБРАЛИ ВІДСТУП ВГОРІ */
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #141414;
+        font-family: Arial, sans-serif;
+    }
+
+    /* РОЗТЯГНУЛИ ЛІНІЮ */
+    .header-custom {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 15px 0; /* Було 30px, тепер 0 для лінії */
+        background: #000;
+        border-bottom: 1px solid #ffffff; 
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .logo-text { 
+        color: #e50914; 
+        font-size: 1.5rem; 
+        font-weight: bold; 
+        text-decoration: none; 
+        margin-left: 30px; /* Відступ тексту від краю */
+        margin-right: 20px; 
+    }
+
+    .back-btn-square {
+        width: 40px; height: 40px;
+        background: #222; border: 1px solid #444;
+        color: white; border-radius: 8px;
+        cursor: pointer; display: flex;
+        align-items: center; justify-content: center;
+        transition: 0.3s;
+    }
+
+    .booking-container { 
+        max-width: 900px; 
+        margin: 20px auto; 
+        text-align: center; 
+        color: white; 
+    }
+
+    .screen-wrapper {
+        perspective: 400px;
+        margin-bottom: 50px;
+    }
+    .screen {
+        width: 80%;
+        height: 12px;
+        background: #fff;
+        margin: 0 auto;
+        border-radius: 50% / 100% 100% 0 0;
+        box-shadow: 0 10px 30px rgba(255, 255, 255, 0.4);
+    }
+    .screen-text {
+        margin-top: 10px;
+        color: #555;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+    }
+
+    #seats-grid { 
+        display: grid; 
+        justify-content: center; 
+        gap: 12px; 
+        margin: 40px 0; 
+    }
+
+    .booking-footer {
+        background: rgba(255,255,255,0.05);
+        padding: 20px;
+        border-radius: 12px;
+        display: inline-block;
+        min-width: 300px;
+    }
+    #buy-btn {
+        margin-top: 15px;
+        padding: 15px 50px;
+        background: #e50914;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: 0.3s;
+    }
+    #buy-btn:hover { background: #b20710; transform: scale(1.05); }
+</style>
 </head>
-<body>
+<body style="background: #141414; margin: 0; font-family: Arial, sans-serif;">
 
-    <h1>Оберіть місця</h1>
+    <header class="header-custom">
+        <a href="index.html" class="logo-text">Cinema Star</a>
+        <button onclick="window.history.back()" class="back-btn-square" title="Назад">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+    </header>
 
-    <div class="screen">ЕКРАН</div>
+    <main class="container booking-container">
+    <h1 style="margin-bottom: 40px;">Оберіть місця</h1>
 
-    <div id="hall"></div>
+    <div class="screen-wrapper">
+        <div class="screen"></div>
+        <div class="screen-text">ЕКРАН</div>
+    </div>
+    
+    <div id="seats-grid"></div>
 
-    <button onclick="buy()">Купити</button>
+    <div class="booking-footer">
+        <p>Обрано місць: <b id="selected-count">0</b></p>
+        <p>Сума: <b id="total-price">0</b> грн</p>
+        <button id="buy-btn">Купити квитки</button>
+    </div>
+</main>
 
-    <script src="/js/pages/booking.js?v=2"></script>
-
+    <script type="module" src="js/pages/booking.js"></script>
+    <script>
+    (function() {
+        const checkInitials = () => {
+            const firstName = localStorage.getItem('first_name');
+            const avatar = document.getElementById('profileAvatar');
+            
+            if (avatar && firstName && firstName !== 'null') {
+                const letter = firstName.charAt(0).toUpperCase();
+                if (avatar.innerText.trim() !== letter) {
+                    avatar.innerText = letter;
+                }
+            }
+        };
+        checkInitials();
+        setTimeout(checkInitials, 500);
+    })();
+</script>
 </body>
 </html>

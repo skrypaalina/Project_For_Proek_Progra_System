@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Мій Профіль — Cinema Star</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { background: #0b0b0b; color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 50px; }
+        
+        .top-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+        }
+
+        .logo-text { 
+            color: #e50914; 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+            text-decoration: none; 
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 55px;
+            height: 38px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 1px solid #333;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .back-button svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2.5; }
+
+        .profile-card { 
+            background: #111; 
+            padding: 40px; 
+            border-radius: 20px; 
+            margin: 30px auto; 
+            max-width: 1000px; 
+            display: flex; 
+            align-items: center; 
+            gap: 40px;
+            border: 1px solid #222;
+        }
+
+        .avatar-circle { 
+            position: relative; 
+            width: 200px; 
+            height: 200px; 
+            border-radius: 50%; 
+            border: 4px solid #e50914; 
+            overflow: hidden; 
+            background: #222;
+        }
+        
+        #profileImage { width: 100%; height: 100%; object-fit: cover; }
+
+        .user-name { font-size: 3.5rem; font-weight: bold; margin: 0; }
+        
+        .balance-badge { 
+            background: #e50914; 
+            padding: 12px 25px; 
+            border-radius: 10px; 
+            font-weight: bold; 
+            display: inline-flex; 
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px; 
+        }
+
+        .content-section { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        .section-h { font-size: 1.8rem; margin: 40px 0 25px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <a href="index.html" class="logo-text">Cinema Star</a>
+        <a href="index.html" class="back-button">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+    </div>
+
+    <div class="profile-card">
+        <div class="avatar-circle">
+            <img id="profileImage" src="images/avatar.png">
+        </div>
+        <div class="info-block">
+            <h1 id="userName" class="user-name">Марія</h1>
+            <div class="balance-badge">Мій баланс: <span id="userBonuses">60</span> 🪙</div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-h">🎟️ Ваші квитки</h2>
+        <div id="ticketsContainer"></div>
+        <h2 class="section-h" style="color: #555;">🎞️ Історія переглядів</h2>
+        <div id="historyContainer"></div>
+    </div>
+
+    <script src="js/pages/profile.js"></script>
+</body>
+</html>

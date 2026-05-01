@@ -1,13 +1,11 @@
-from sqlalchemy import Column, Integer, String, DECIMAL
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from backend.database import Base
+import datetime
 
 class Booking(Base):
-    __tablename__ = "Bookings"
+    __tablename__ = "bookings" 
 
     id = Column(Integer, primary_key=True, index=True)
-    session_id = Column(Integer)
-    seat_number = Column(Integer)
-    user_id = Column(Integer)
-    booking_type = Column(String)
-    status = Column(String)
-    total_amount = Column(DECIMAL(10, 2))
+    user_id = Column(Integer, ForeignKey('users.id')) 
+    session_id = Column(Integer, ForeignKey('sessions.id')) 
+    seat_number = Column(String(10))

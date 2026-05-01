@@ -1,66 +1,54 @@
-const header = document.getElementById('header');
-const userId = localStorage.getItem('user_id');
-const firstName = localStorage.getItem('first_name') || 'U'; 
-const initial = firstName.charAt(0).toUpperCase(); 
+const renderHeader = () => {
+    const header = document.getElementById('header');
+    if (!header) return;
 
-header.innerHTML = `
-    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: #000; color: white; width: 100%; box-sizing: border-box;">
-        
-        <div style="flex: 1;">
-            <a href="index.html" style="color: #e50914; font-size: 1.5rem; font-weight: bold; text-decoration: none; letter-spacing: 1px;">Cinema Star</a>
-        </div>
-        
-        <div style="display: flex; gap: 30px; align-items: center; justify-content: flex-end; flex: 1;">
-            <a href="index.html" style="color: white; text-decoration: none; font-size: 1rem;">Фільми</a>
-            
-            ${userId 
-                ? `
-                   <div style="position: relative;" id="profileContainer">
-                       
-                       <div id="profileAvatar" style="cursor: pointer; width: 40px; height: 40px; background: #e50914; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; border: 2px solid transparent; transition: 0.3s; user-select: none;">
-                           ${initial}
-                       </div>
-                       
-                       <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 55px; background: #1a1a1a; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.8); padding: 10px 0; min-width: 150px; z-index: 1000; flex-direction: column;">
-                           <a href="profile.html" style="color: white; text-decoration: none; padding: 10px 20px; display: block; font-size: 0.95rem;">Мій профіль</a>
-                           <div style="height: 1px; background: #333; margin: 5px 0;"></div>
-                           <a href="#" id="logoutBtn" style="color: #e50914; text-decoration: none; padding: 10px 20px; display: block; font-size: 0.95rem;">Вийти</a>
-                       </div>
-                       
-                   </div>
-                  `
-                : `<a href="login.html" style="background: #e50914; color: white; padding: 8px 20px; border-radius: 4px; text-decoration: none; font-weight: bold;">Увійти</a>`
-            }
-        </div>
-    </nav>
-`;
-
-if (userId) {
-    const avatar = document.getElementById('profileAvatar');
-    const dropdown = document.getElementById('dropdownMenu');
+    const userId = localStorage.getItem('user_id');
+    const firstName = localStorage.getItem('first_name');
+    const initial = (firstName && firstName !== 'null') ? firstName.charAt(0).toUpperCase() : 'M';
     
-    avatar.addEventListener('click', (e) => {
-        e.stopPropagation(); 
-        if (dropdown.style.display === 'none') {
-            dropdown.style.display = 'flex';
-            avatar.style.border = '2px solid white'; 
-        } else {
-            dropdown.style.display = 'none';
-            avatar.style.border = '2px solid transparent';
-        }
-    });
+    // Прямий шлях до Барбі
+    const userPhoto = "images/avatar.png"; 
 
-    document.addEventListener('click', (e) => {
-        if (dropdown.style.display === 'flex' && !dropdown.contains(e.target)) {
-            dropdown.style.display = 'none';
-            avatar.style.border = '2px solid transparent';
-        }
-    });
+    header.innerHTML = `
+        <nav style="display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: #000; color: white; border-bottom: 1px solid #333; width: 100%; box-sizing: border-box;">
+            <a href="index.html" style="color: #e50914; font-size: 1.5rem; font-weight: bold; text-decoration: none;">Cinema Star</a>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <a href="index.html" style="color: white; text-decoration: none; font-size: 1rem;">Фільми</a>
+                ${userId ? `
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <div id="profileAvatar" style="cursor: pointer; width: 40px; height: 40px; background: #e50914; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; overflow: hidden; border: 1px solid #444;">
+                            
+                            <img src="${userPhoto}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; font-size: 1.2rem;">${initial}</div>
+                            
+                        </div>
+                        <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 50px; background: #1a1a1a; border-radius: 8px; padding: 10px 0; min-width: 150px; border: 1px solid #333; z-index: 1000; flex-direction: column;">
+                            <a href="profile.html" style="color: white; text-decoration: none; padding: 10px 20px; display: block; font-size: 0.9rem;">Мій профіль</a>
+                            <div style="height: 1px; background: #333; margin: 2px 0;"></div>
+                            <a href="#" id="logoutBtn" style="color: #e50914; text-decoration: none; padding: 10px 20px; display: block; font-size: 0.9rem;">Вийти</a>
+                        </div>
+                    </div>` : `<a href="login.html" style="background: #e50914; color: white; padding: 8px 20px; border-radius: 4px; text-decoration: none;">Увійти</a>`}
+            </div>
+        </nav>`;
 
-    document.getElementById('logoutBtn').addEventListener('click', (e) => {
-        e.preventDefault();
-        localStorage.removeItem('user_id');
-        localStorage.removeItem('first_name');
-        window.location.href = "index.html";
-    });
-}
+    if (userId) {
+        const avatar = document.getElementById('profileAvatar');
+        const dropdown = document.getElementById('dropdownMenu');
+        if (avatar && dropdown) {
+            avatar.onclick = (e) => { 
+                e.stopPropagation(); 
+                dropdown.style.display = (dropdown.style.display === 'flex') ? 'none' : 'flex'; 
+            };
+            document.onclick = () => dropdown.style.display = 'none';
+        }
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.onclick = (e) => { 
+                e.preventDefault();
+                localStorage.clear(); 
+                window.location.href = 'index.html'; 
+            };
+        }
+    }
+};
+renderHeader();

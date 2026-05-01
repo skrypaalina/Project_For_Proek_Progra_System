@@ -2,27 +2,129 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Інформація про фільм</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Деталі фільму — Cinema Star</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/booking.css">
+
+    <style>
+        .header-custom {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Вирівнюємо вміст по лівому краю */
+            padding: 15px 30px;         /* Відступи від країв екрану */
+            background: #000;
+            border-bottom: 1px solid #222;
+            width: 100%;                /* Розтягуємо на всю ширину */
+            box-sizing: border-box;
+        }
+        .logo-text { color: #e50914; font-size: 1.5rem; font-weight: bold; text-decoration: none; 
+            color: #e50914; 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        
+        .back-btn-square {
+            width: 40px; height: 40px;
+            background: #222; border: 1px solid #444;
+            color: white; border-radius: 8px;
+            cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            transition: 0.3s; margin-left: 15px;
+        }
+        .back-btn-square:hover { background: #e50914; border-color: #e50914; }
+
+        .movie-details-container {
+            display: flex;
+            gap: 40px;
+            margin-top: 40px;
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 12px;
+        }
+        .movie-poster-large {
+            width: 300px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none; /* Покажеться через JS */
+        }
+        .movie-info h1 { font-size: 2.5rem; margin-top: 0; }
+        .movie-info p { line-height: 1.6; color: #ccc; font-size: 1.1rem; }
+        
+        .sessions-section { margin-top: 40px; }
+        .session-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .session-btn {
+            background: #333; border: 1px solid #444;
+            color: white; padding: 15px;
+            border-radius: 8px; cursor: pointer;
+            text-align: center; transition: 0.2s;
+        }
+        .session-btn:hover { background: #e50914; border-color: #e50914; }
+        .session-btn span { font-size: 0.8rem; color: #aaa; }
+    </style>
 </head>
-<body>
+<body style="background: #141414; color: white; font-family: 'Inter', sans-serif; margin: 0;">
 
-    <div class="movie-container">
-        <div class="movie-detail-wrapper">
+    <header class="header-custom">
+        <a href="index.html" class="logo-text">Cinema Star</a>
+        <button onclick="window.history.back()" class="back-btn-square" title="Назад">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+    </header>
+
+    <main class="container">
+        <div class="movie-details-container">
+
+            <img id="movie-poster" class="movie-poster-large" src="" alt="Постер">
             
-            <img id="movie-poster" src="" alt="Постер фільму" class="movie-poster">
-
-            <div class="movie-text-wrapper">
+            <div class="movie-info">
                 <h1 id="movie-title">Завантаження...</h1>
-                <p id="movie-description"></p>
+                <p id="movie-description">Опис завантажується...</p>
+                
+                <div class="sessions-section">
+                    <h2>Оберіть сеанс</h2>
+                    <div id="sessions-container" class="session-grid">
+                        <!-- Сюди JS додасть кнопки сеансів -->
+                    </div>
+                </div>
             </div>
         </div>
+    </main>
 
-        <h2>Сеанси</h2>
-        <div id="sessions-container" class="sessions-grid"></div>
-    </div>
+    <script type="module" src="components/header.js?v=1.1"></script>
+    <script type="module" src="js/pages/movie.js"></script>
 
-    <script type="module" src="/js/pages/movie.js"></script>
+    <script>
+    // Цей скрипт спрацює миттєво, не чекаючи на header.js
+    (function() {
+        const checkInitials = () => {
+            const firstName = localStorage.getItem('first_name');
+            const avatar = document.getElementById('profileAvatar');
+            
+            if (avatar && firstName && firstName !== 'null') {
+                const letter = firstName.charAt(0).toUpperCase();
+                // Якщо в іконці зараз "U", а в пам'яті "М" — міняємо примусово
+                if (avatar.innerText.trim() !== letter) {
+                    avatar.innerText = letter;
+                    console.log("Примусово змінено на:", letter);
+                }
+            }
+        };
 
+        // Перевіряємо відразу і через півсекунди (коли хедер точно дорендериться)
+        checkInitials();
+        setTimeout(checkInitials, 500);
+    })();
+</script>
 </body>
 </html>
