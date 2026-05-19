@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = Object.fromEntries(formData.entries());
 
             try {
+                // Стабільний запит на Python-бекенд
                 const response = await fetch("http://127.0.0.1:8005/api/login", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -17,19 +18,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json();
 
                 if (response.ok) {
-                    // Зберігаємо ВСЕ, що прислав бекенд
+                    // Записуємо дані у браузер
                     localStorage.setItem('user_id', result.user_id);
                     localStorage.setItem('first_name', result.first_name); 
+                    localStorage.setItem('user_email', data.email.trim().toLowerCase()); // Рятувальний рядок
                     
-                    console.log("Збережено ім'я:", localStorage.getItem('first_name'));
-                    
-                    // Переходимо на головну
                     window.location.href = 'index.html';
                 } else {
                     alert(result.detail || "Помилка входу");
                 }
             } catch (error) {
                 console.error("Помилка:", error);
+                alert("Сервер Python не запущено на порту 8005!");
             }
         };
     }

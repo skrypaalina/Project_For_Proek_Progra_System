@@ -3,11 +3,14 @@ const renderHeader = () => {
     if (!header) return;
 
     const userId = localStorage.getItem('user_id');
-    const firstName = localStorage.getItem('first_name');
-    const initial = (firstName && firstName !== 'null') ? firstName.charAt(0).toUpperCase() : 'M';
+    const firstName = localStorage.getItem('first_name') || "";
     
-    // Прямий шлях до Барбі
-    const userPhoto = "images/avatar.png"; 
+    const initial = (firstName && firstName !== 'null') ? firstName.charAt(0).toUpperCase() : 'M';
+    const userPhoto = localStorage.getItem('user_photo') || "images/avatar.png"; 
+
+    // ЗАЛІЗОБЕТОННА ПЕРЕВІРКА: якщо ім'я Марія (або починається на Мар), то це ти — адмін!
+    // ВИПРАВЛЕНО: Тепер пускає і якщо ім'я "admin", і якщо ім'я "Марія"
+    const isAdmin = firstName.toLowerCase() === 'admin' || firstName.toLowerCase().startsWith('мар') || userId == 1;
 
     header.innerHTML = `
         <nav style="display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: #000; color: white; border-bottom: 1px solid #333; width: 100%; box-sizing: border-box;">
@@ -17,12 +20,13 @@ const renderHeader = () => {
                 ${userId ? `
                     <div style="position: relative; display: flex; align-items: center;">
                         <div id="profileAvatar" style="cursor: pointer; width: 40px; height: 40px; background: #e50914; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; overflow: hidden; border: 1px solid #444;">
-                            
                             <img src="${userPhoto}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; font-size: 1.2rem;">${initial}</div>
-                            
                         </div>
-                        <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 50px; background: #1a1a1a; border-radius: 8px; padding: 10px 0; min-width: 150px; border: 1px solid #333; z-index: 1000; flex-direction: column;">
+                        <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 50px; background: #1a1a1a; border-radius: 8px; padding: 10px 0; min-width: 170px; border: 1px solid #333; z-index: 1000; flex-direction: column;">
+                            
+                            ${isAdmin ? `<a href="admin.html" style="color: #ffcc00; text-decoration: none; padding: 10px 20px; display: block; font-size: 0.9rem; font-weight: bold; border-bottom: 1px solid #222;">Панель адміна ⭐</a>` : ''}
+                            
                             <a href="profile.html" style="color: white; text-decoration: none; padding: 10px 20px; display: block; font-size: 0.9rem;">Мій профіль</a>
                             <div style="height: 1px; background: #333; margin: 2px 0;"></div>
                             <a href="#" id="logoutBtn" style="color: #e50914; text-decoration: none; padding: 10px 20px; display: block; font-size: 0.9rem;">Вийти</a>

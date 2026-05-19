@@ -1,7 +1,6 @@
 const urlParams = new URLSearchParams(window.location.search);
 const movieId = urlParams.get('id');
 
-// Вказуємо правильну адресу бекенду
 const BASE_URL = "http://127.0.0.1:8005/api";
 
 async function loadData() {
@@ -18,7 +17,6 @@ async function loadData() {
     try {
         console.log("Починаю завантаження для ID:", movieId);
 
-        // ВИПРАВЛЕНО: Додано повну адресу BASE_URL
         const movieResponse = await fetch(`${BASE_URL}/movies/${movieId}`);
         if (!movieResponse.ok) throw new Error(`Помилка фільму: ${movieResponse.status}`);
         const movie = await movieResponse.json();
@@ -26,7 +24,6 @@ async function loadData() {
         titleEl.textContent = movie.title;
         descEl.textContent = movie.description;
 
-        // Вставляємо фото
         if (movie.poster_url) {
             posterEl.src = movie.poster_url;
             posterEl.style.display = 'block';
@@ -34,7 +31,6 @@ async function loadData() {
             posterEl.style.display = 'none';
         }
 
-        // ВИПРАВЛЕНО: Додано повну адресу BASE_URL
         const sessionsResponse = await fetch(`${BASE_URL}/movies/${movieId}/sessions`);
         if (!sessionsResponse.ok) throw new Error(`Помилка сеансів: ${sessionsResponse.status}`);
         const sessions = await sessionsResponse.json();
@@ -47,15 +43,30 @@ async function loadData() {
                 return;
             }
 
+            const now = new Date();
+            let hasFutureSessions = false;
+
             sessions.forEach(session => {
-                const time = new Date(session.start_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                const btn = document.createElement('button');
-                btn.className = 'session-btn';
-                btn.innerHTML = `${time} <br> <span>${session.base_price} грн</span>`;
-                // ТУТ ТЕЖ ПРИБИРАЄМО СЛЕШ, якщо файл лежить у корені
-                btn.onclick = () => window.location.href = `booking.html?session_id=${session.id}`;
-                container.appendChild(btn);
+                const sessionDate = new Date(session.start_time);
+
+                if (sessionDate > now) {
+                    hasFutureSessions = true;
+
+                    const dateStr = sessionDate.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit' });
+                    const timeStr = sessionDate.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
+
+                    const btn = document.createElement('button');
+                    btn.className = 'session-btn';
+                    btn.innerHTML = `${dateStr} о ${timeStr} <br> <span>${session.base_price} грн</span>`;
+                    
+                    btn.onclick = () => window.location.href = `booking.html?session_id=${session.id}`;
+                    container.appendChild(btn);
+                }
             });
+
+            if (!hasFutureSessions) {
+                container.innerHTML = "<p>На жаль, усі сеанси на цей фільм уже пройшли.</p>";
+            }
         }
 
     } catch (error) {

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель Адміністратора</title>
+    <link rel="stylesheet" href="css/style.css"> </head>
+<body style="background: #111; color: white; padding: 50px;">
+    <div id="header"></div> <div style="max-width: 800px; margin: 0 auto;">
+        <h2>Керування фільмами</h2>
+        
+        <form id="movieForm" style="background: #222; padding: 30px; border-radius: 10px; display: flex; flex-direction: column; gap: 15px;">
+            <input type="hidden" id="movieId">
+            
+            <label>Назва фільму:</label>
+            <input type="text" id="movieTitle" required style="padding: 10px; background: #333; color: white; border: none; border-radius: 5px;">
+
+            <label>Опис фільму:</label>
+            <textarea id="movieDesc" rows="5" required style="padding: 10px; background: #333; color: white; border: none; border-radius: 5px;"></textarea>
+
+            <label>Постер фільму:</label>
+            <input type="file" id="moviePoster" accept="image/*" style="color: white;">
+
+            <button type="submit" id="submitBtn" style="background: #e50914; color: white; padding: 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Зберегти фільм</button>
+            <button type="button" id="cancelEdit" style="display: none; background: #555; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">Скасувати редагування</button>
+        </form>
+
+        <h3 style="margin-top: 40px;">Список фільмів на сайті</h3>
+        <div id="adminMoviesList" style="display: flex; flex-direction: column; gap: 15px;"></div>
+    </div>
+
+    <script src="components/header.js"></script>
+    <script src="js/pages/admin.js"></script>
+</body>
+</html>
