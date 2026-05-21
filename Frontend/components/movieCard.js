@@ -1,6 +1,5 @@
 export function movieCard(movie) {
     const imageUrl = movie.poster_url ? movie.poster_url : "https://via.placeholder.com/250x350/222222/e50914?text=Постер";
-    
     return `
         <div class="movie-card" onclick="openMovie(${movie.id})" style="cursor: pointer; background: #111; border-radius: 8px; overflow: hidden; transition: transform 0.2s; text-align: center; display: flex; flex-direction: column; box-shadow: 0 4px 8px rgba(0,0,0,0.5);">
             <img src="${imageUrl}" alt="${movie.title}" style="width: 100%; height: 350px; object-fit: cover;">
