@@ -3,12 +3,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 import shutil
 import os
-
 from backend.database import get_db
 from backend.models.movie import Movie 
 
 router = APIRouter()
-
 @router.get("/movies")
 def get_all_movies(db: Session = Depends(get_db)):
     """Отримання всіх фільмів для головної та адмінки"""
