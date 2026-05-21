@@ -1,7 +1,6 @@
 const urlParams = new URLSearchParams(window.location.search);
 const sessionId = urlParams.get('session_id');
 const BASE_URL = "http://127.0.0.1:8005/api";
-
 let selectedSeats = []; 
 
 async function loadSeats() {
